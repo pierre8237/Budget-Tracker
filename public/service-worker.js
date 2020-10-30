@@ -41,7 +41,7 @@ self.addEventListener("fetch", event => {
   if (event.request.url.includes("/api/")) {
     console.log("[Service Worker] Fetch(data)", event.request.url);
     event.respondWith(
-      caches.open(DATA_CACHE_NAME).then(async cache => {
+      caches.open(DATA_CACHE_NAME).then(cache => {
         try {
           const response = await fetch(event.request);
           // If the response was good, clone it and store it in the cache.
@@ -57,7 +57,7 @@ self.addEventListener("fetch", event => {
     return;
   }
   event.respondWith(
-    caches.open(CACHE_NAME).then(async cache => {
+    caches.open(CACHE_NAME).then(cache => {
       const response = await cache.match(event.request);
       return response || fetch(event.request);
     })
