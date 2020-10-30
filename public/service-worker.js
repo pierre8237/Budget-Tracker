@@ -9,7 +9,7 @@ const CACHE_NAME = "static-cache-v2";
 const DATA_CACHE_NAME = "data-cache-v1";
 
 //install function
-self.addEventListener("install", function (event) {
+self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log("your files were succcessfully pre-cached");
@@ -20,7 +20,7 @@ self.addEventListener("install", function (event) {
 });
 
 // activate
-self.addEventListener("activate", function (event) {
+self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keyList => {
       return Promise.all(
@@ -37,31 +37,29 @@ self.addEventListener("activate", function (event) {
 });
 
 // fetch
-self.addEventListener("fetch", function (event) {
+self.addEventListener("fetch", event => {
   if (event.request.url.includes("/api/")) {
+    console.log("[Service Worker] Fetch(data)", event.request.url);
     event.respondWith(
-      caches.open(DATA_CACHE_NAME).then(cache => {
-        return fetch(event.request)
-          .then(response => {
-            // If the response was good, clone it and store it in the cache.
-            if (response.status === 200) {
-              cache.put(event.request.url, response.clone());
-            }
-            return response;
-          })
-          .catch(err => {
-            // Network request failed, try to get it from the cache.
-            return cache.match(event.request);
-          });
+      caches.open(DATA_CACHE_NAME).then(async cache => {
+        try {
+          const response = await fetch(event.request);
+          // If the response was good, clone it and store it in the cache.
+          if (response.status === 200) {
+            cache.put(event.request.url, response.clone());
+          }
+          return response;
+        } catch (err) {
+          return cache.match(event.request);
+        }
       })
     );
     return;
   }
   event.respondWith(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.match(event.request).then(response => {
-        return response || fetch(event.request);
-      });
+    caches.open(CACHE_NAME).then(async cache => {
+      const response = await cache.match(event.request);
+      return response || fetch(event.request);
     })
   );
 });
@@ -100,4 +98,4 @@ navigator.serviceWorker.register('whereever the service worker is.js')
 //the service worker to receive messages from other service workers through message events
 
 //fuctional events such as fetch, push, and sync that the service worker can respond to.
-//examine service workers in brower's dev tools
+//examine service workers in brower's dev tools)
