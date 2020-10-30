@@ -1,5 +1,5 @@
-let transactions = [];
-let myChart;
+const Chart = require("chart.js");
+const transactions = [];
 
 fetch("/api/transaction")
   .then(response => {
@@ -73,7 +73,7 @@ function populateChart() {
           label: "Total Over Time",
           fill: true,
           backgroundColor: "#6666ff",
-          data
+          data: [data]
         }
       ]
     }
