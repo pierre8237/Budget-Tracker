@@ -1,0 +1,23 @@
+{
+    "name": "Progressive_Budget_App",
+    "short_name": "BudgetApp",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#dddddd",
+    "theme_color": "#317EFB",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/icons/icon-192x169.png",
+            "type": "image/png",
+            "sizes": "192x169",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon-512x452.png",
+            "type": "image/png",
+            "sizes": "512x452",
+            "purpose": "any"
+        }
+    ]
+}
